@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         $worker = User::all();
-        return view('index',compact('worker'));
+        return view('crud.index',compact('worker'));
     }
 
     /**
@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-         return view('create');
+         return view('crud.create');
     }
 
     /**
@@ -40,13 +40,13 @@ class UserController extends Controller
             "name" => ["required","string"],
             "lastname" =>["required","string"],
             "phone" => ["required","size:11"],// Here i can use ReGex, to validate the phone number, but IDK main country.
-            "email" => ["required","email","string","unique:users,email"],
-            "password" => ["required","confirmed"]
+            "email" => ["required","email","unique:users,email"],
+            "password" => ["required"]
         ]);
 
         $worker = User::create([
             "name" => $data["name"],
-            "last name" => $data["lastname"],
+            "last_name" => $data["lastname"],
             "phone" => $data["phone"],
             "email" => $data["email"],
             "password" => bcrypt($data["password"])
@@ -79,7 +79,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $worker = User::findOrFail($id);
-        return view('edit', compact('worker'));
+        return view('crud.edit', compact('worker'));
     }
 
     /**
@@ -93,13 +93,13 @@ class UserController extends Controller
     {
         $data = $request->validate([
             "name" => ["required","string"],
-            "lastname" =>["required","string"],
+            "last_name" =>["required","string"],
             "phone" => ["required","size:11"],// Here i can use ReGex, to validate the phone number, but IDK main country.
-            "email" => ["required","email","string","unique:users,email"],
-            "password" => ["required","confirmed"]
+            "email" => ["required","email"],
+            "password" => ["required"]
         ]);
         User::whereId($id)->update($data);
-        return redirect(route("students"))->with('completed', 'Worker has been updated');
+        return redirect('/workers')->with('completed', 'Worker has been updated');
     }
 
     /**
