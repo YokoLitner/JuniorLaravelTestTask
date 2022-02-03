@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $worker = User::all();
+        $worker = User::orderBy('name')->paginate(2);
         return view('crud.index',compact('worker'));
     }
 
