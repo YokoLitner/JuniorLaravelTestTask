@@ -19,6 +19,8 @@ Route::get('/', [\App\Http\Controllers\IndexController::class, 'showHomePage'])-
 Route::middleware("auth")->group(function(){
     Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+    Route::post('/image/upload', [\App\Http\Controllers\ImageController::class, 'imageUpload'])->name('imageUpload');
+
     Route::resource('workers', UserController::class);
 });
 

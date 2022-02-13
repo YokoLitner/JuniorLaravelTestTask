@@ -9,6 +9,19 @@
                     <div class="hidden fixed top-0 left-0 pr-6 py-4 sm:block">
                         <a href="{{ route('workers.index') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline ">Your company</a>
                     </div>
+                    <!--rounded-circle border border-success-->
+                    <form action="{{ route('imageUpload') }}" method="post" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <input type="file" name="image">
+                        </div>
+
+                        <button class="btn btn-default" type="submit">Upload</button>
+                        @isset($path)
+                            <img class="img-fluid" src="{{ asset('/storage/'.$path)}}">
+                        @endisset
+                    </form>
                     @endauth
                     <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                         @auth("web")
