@@ -1,4 +1,4 @@
-This is my Laravel-Jun-Test-Task.
+# This is my pet-project
 
 The goal is to create a project, a mini CRM, for the management of companies and its employees.
 
