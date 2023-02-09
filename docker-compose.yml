@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.4-alpine
+    container_name: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./storage/_db:/var/lib/postgresql
+
+  webserver:
+    image: nginx:1.21.4-alpine
+    container_name: nginx-webserver
+    restart: always
+    volumes:
+      - ./:/app
+      - ./cfg/nginx/:/etc/nginx/conf.d/
+      - ./storage/logs/nginx/:/var/logs/nginx/
+    ports:
+      - "80:80"
+    links:
+      - app
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    volumes:
+      - ./storage/_redis:/data:rw
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: app
+    restart: always
+    ports:
+      - ":9000"
+    volumes:
+      - ./:/app
+      - ./cfg/php/php.ini:/user/local/etc/php/conf.d/extend-php.ini
+    depends_on:
+      - db
