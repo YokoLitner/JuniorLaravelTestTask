@@ -18,7 +18,7 @@ services:
     container_name: nginx-webserver
     restart: always
     volumes:
-      - ./:/app
+      - ./:/var/www
       - ./cfg/nginx/:/etc/nginx/conf.d/
       - ./storage/logs/nginx/:/var/logs/nginx/
     ports:
@@ -43,7 +43,7 @@ services:
     ports:
       - ":9000"
     volumes:
-      - ./:/app
+      - ./:/var/www
       - ./cfg/php/php.ini:/user/local/etc/php/conf.d/extend-php.ini
     depends_on:
       - db
