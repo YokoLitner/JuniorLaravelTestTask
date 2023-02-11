@@ -13,15 +13,34 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->rememberToken();
+                $table->date('employment_date');
+                $table->string('company_role');
+                $table->number('company_id');
+                $table->string('avatar');
+                $table->timestamps();
+            });
+
+            Schema::table('users', function (Blueprint $table) {
+                $table->index('company_id');
+
+                $table->foreign('company_id')
+                    ->references('id')
+                    ->on('companies')
+                    ->nullable()
+                    ->constrained()
+                    ->onDelete('cascade');
+            });
+        }
+        
     }
 
     /**
@@ -31,6 +50,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign('company_id');
+            $table->dropIndex('company_id');
+            $table->dropColumn('users');
+        });
     }
 };
