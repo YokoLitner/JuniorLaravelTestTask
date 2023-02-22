@@ -13,17 +13,21 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('celebrations')) {
-            Schema::create('celebrations', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->date('date');
+        if (!Schema::hasTable('company_user')) {
+            Schema::create('company_user', function (Blueprint $table) {
+                $table->integer('company_id');
                 $table->integer('user_id');
-                $table->timestamps();
             });
 
-            Schema::table('celebrations', function (Blueprint $table) {
+            Schema::table('company_user', function (Blueprint $table) {
+                $table->index('company_id');
                 $table->index('user_id');
+                $table->index(['company_id', 'user_id']);
+
+                $table->foreign('company_id')
+                    ->references('id')
+                    ->on('companies')
+                    ->onDelete('cascade');
 
                 $table->foreign('user_id')
                     ->references('id')
@@ -31,7 +35,6 @@ return new class extends Migration
                     ->onDelete('cascade');
             });
         }
-    
     }
 
     /**
@@ -41,10 +44,15 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('celebrations', function (Blueprint $table) {
+        Schema::table('company_user', function (Blueprint $table) {
+            $table->dropForeign(['company_id']);
             $table->dropForeign(['user_id']);
+
+            $table->dropIndex(['company_id']);
             $table->dropIndex(['user_id']);
-            $table->dropIfExists('celebrations');
+            $table->dropIndex(['company_id', 'user_id']);
+
+            $table->dropIfExists('company_user');
         });
     }
 };

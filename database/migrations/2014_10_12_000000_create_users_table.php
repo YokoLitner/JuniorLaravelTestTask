@@ -24,23 +24,10 @@ return new class extends Migration
                 $table->rememberToken();
                 $table->date('employment_date');
                 $table->string('company_role');
-                $table->number('company_id');
                 $table->string('avatar');
                 $table->timestamps();
             });
-
-            Schema::table('users', function (Blueprint $table) {
-                $table->index('company_id');
-
-                $table->foreign('company_id')
-                    ->references('id')
-                    ->on('companies')
-                    ->nullable()
-                    ->constrained()
-                    ->onDelete('cascade');
-            });
         }
-        
     }
 
     /**
@@ -51,9 +38,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('company_id');
-            $table->dropIndex('company_id');
-            $table->dropColumn('users');
+            $table->dropIfExists('users');
         });
     }
 };

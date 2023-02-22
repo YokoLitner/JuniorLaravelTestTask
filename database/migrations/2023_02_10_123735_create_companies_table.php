@@ -13,22 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        if(!Schema::hasTable('companies')){
+        if (!Schema::hasTable('companies')) {
             Schema::create('companies', function (Blueprint $table) {
                 $table->id();
                 $table->string('name', 64);
                 $table->string('logo');
-                $table->number('founder_id');
+                $table->integer('founder_id');
                 $table->timestamps();
-            });
-
-            Schema::table('companies', function (Blueprint $table) {
-                $table->index('founder_id');
-
-                $table->foreign('founder_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade');
             });
         }
     }
@@ -41,9 +32,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->dropForeign('founder_id');
-            $table->dropIndex('founder_id');
-            $table->dropColumn('companies');
+            $table->dropIfExists('companies');
         });
     }
 };
