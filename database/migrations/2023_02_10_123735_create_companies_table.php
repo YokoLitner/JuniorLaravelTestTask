@@ -19,6 +19,7 @@ return new class extends Migration
                 $table->string('name', 64);
                 $table->string('logo');
                 $table->integer('founder_id');
+                $table->string('website');
                 $table->timestamps();
             });
         }
